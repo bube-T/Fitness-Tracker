@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign up — Health Tracker</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-page">
+    <section class="card">
+      <span class="brand">Health Tracker</span>
+      <h1>Create account</h1>
+      <p class="subtitle">Start tracking meals and workouts today.</p>
+
+      <p id="alert" class="alert alert-error" hidden role="alert"></p>
+
+      <form id="register-form">
+        <p class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" required autocomplete="email" />
+        </p>
+        <p class="form-group">
+          <label for="password">Password (min 6 characters)</label>
+          <input id="password" type="password" required minlength="6" autocomplete="new-password" />
+        </p>
+        <button type="submit" class="btn btn-primary">Sign up</button>
+      </form>
+
+      <p class="auth-footer">
+        Already have an account? <a href="login.html">Log in</a>
+      </p>
+    </section>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        window.location.href = "dashboard.html";
+      }
+
+      const form = document.getElementById("register-form");
+      const alertBox = document.getElementById("alert");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        alertBox.hidden = true;
+        try {
+          await register(
+            document.getElementById("email").value.trim(),
+            document.getElementById("password").value
+          );
+          await login(
+            document.getElementById("email").value.trim(),
+            document.getElementById("password").value
+          );
+          window.location.href = "dashboard.html";
+        } catch (err) {
+          alertBox.textContent = err.message;
+          alertBox.className = "alert alert-error";
+          alertBox.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>

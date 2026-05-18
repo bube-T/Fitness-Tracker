@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — Health Tracker</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <main class="container">
+      <header class="dashboard-header">
+        <section>
+          <span class="brand">Health Tracker</span>
+          <h1>Dashboard</h1>
+          <p class="subtitle">Your nutrition and fitness at a glance.</p>
+        </section>
+        <section class="user-bar">
+          <span id="user-email"></span>
+          <button type="button" id="logout-btn" class="btn btn-ghost btn-sm">Log out</button>
+        </section>
+      </header>
+
+      <p id="alert" class="alert" hidden role="alert"></p>
+
+      <section class="stats-row">
+        <article class="stat-card">
+          <h3>Today&apos;s calories</h3>
+          <p><span id="today-calories">0</span> kcal</p>
+        </article>
+        <article class="stat-card workout-stat">
+          <h3>Today&apos;s workout</h3>
+          <p><span id="today-minutes">0</span> min</p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h2>Last 7 days</h2>
+        <section class="chart-wrap">
+          <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
+        </section>
+      </section>
+
+      <section class="grid-2">
+        <section class="panel">
+          <h2>Log a meal</h2>
+          <form id="meal-form">
+            <p class="form-group">
+              <label for="meal-name">Meal name</label>
+              <input id="meal-name" required placeholder="e.g. Grilled chicken salad" />
+            </p>
+            <section class="form-row">
+              <p class="form-group">
+                <label for="meal-calories">Calories</label>
+                <input id="meal-calories" type="number" min="0" required />
+              </p>
+              <p class="form-group">
+                <label for="meal-date">Date</label>
+                <input id="meal-date" type="date" required />
+              </p>
+            </section>
+            <button type="submit" class="btn btn-secondary">Add meal</button>
+          </form>
+          <h2 style="margin-top: 1.5rem">Your meals</h2>
+          <section id="meal-list" class="list"></section>
+        </section>
+
+        <section class="panel">
+          <h2>Log a workout</h2>
+          <form id="workout-form">
+            <p class="form-group">
+              <label for="workout-type">Workout type</label>
+              <input id="workout-type" required placeholder="e.g. Running, Yoga" />
+            </p>
+            <section class="form-row">
+              <p class="form-group">
+                <label for="workout-duration">Duration (minutes)</label>
+                <input id="workout-duration" type="number" min="1" required />
+              </p>
+              <p class="form-group">
+                <label for="workout-date">Date</label>
+                <input id="workout-date" type="date" required />
+              </p>
+            </section>
+            <button type="submit" class="btn btn-secondary">Add workout</button>
+          </form>
+          <h2 style="margin-top: 1.5rem">Your workouts</h2>
+          <section id="workout-list" class="list"></section>
+        </section>
+      </section>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
+</html>

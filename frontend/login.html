@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log in — Health Tracker</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="auth-page">
+    <section class="card">
+      <span class="brand">Health Tracker</span>
+      <h1>Welcome back</h1>
+      <p class="subtitle">Log meals and workouts in one place.</p>
+
+      <p id="alert" class="alert alert-error" hidden role="alert"></p>
+
+      <form id="login-form">
+        <p class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" required autocomplete="email" />
+        </p>
+        <p class="form-group">
+          <label for="password">Password</label>
+          <input id="password" type="password" required autocomplete="current-password" />
+        </p>
+        <button type="submit" class="btn btn-primary">Log in</button>
+      </form>
+
+      <p class="auth-footer">
+        New here? <a href="register.html">Create an account</a>
+      </p>
+    </section>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+      if (isLoggedIn()) {
+        window.location.href = "dashboard.html";
+      }
+
+      const form = document.getElementById("login-form");
+      const alertBox = document.getElementById("alert");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        alertBox.hidden = true;
+        try {
+          await login(
+            document.getElementById("email").value.trim(),
+            document.getElementById("password").value
+          );
+          window.location.href = "dashboard.html";
+        } catch (err) {
+          alertBox.textContent = err.message;
+          alertBox.className = "alert alert-error";
+          alertBox.hidden = false;
+        }
+      });
+    </script>
+  </body>
+</html>
