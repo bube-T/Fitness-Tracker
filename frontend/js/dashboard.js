@@ -1,4 +1,31 @@
 let weeklyChart = null;
+let modalResolve = null;
+let confirmResolve = null;
+
+const GOAL_KEY = "calorie_goal";
+const DEFAULT_GOAL = 2000;
+
+function getGoal() {
+  return Number(localStorage.getItem(GOAL_KEY)) || DEFAULT_GOAL;
+}
+
+function saveGoal(n) {
+  localStorage.setItem(GOAL_KEY, String(n));
+}
+
+function updateProgressBar(calories) {
+  const goal = getGoal();
+  const pct = Math.min((calories / goal) * 100, 100);
+  const bar = document.getElementById("calorie-progress-bar");
+  bar.style.width = pct + "%";
+  bar.classList.remove("warn", "over");
+  if (calories > goal) {
+    bar.classList.add("over");
+  } else if (pct >= 85) {
+    bar.classList.add("warn");
+  }
+  document.getElementById("calorie-goal-display").textContent = goal;
+}
 
 document.addEventListener("DOMContentLoaded", async () => {
   requireAuth();
@@ -8,6 +35,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("workout-form").addEventListener("submit", onWorkoutSubmit);
   document.getElementById("meal-list").addEventListener("click", handleListAction);
   document.getElementById("workout-list").addEventListener("click", handleListAction);
+
+  document.getElementById("modal-cancel").addEventListener("click", closeModal);
+  document.getElementById("modal-save").addEventListener("click", saveModal);
+  document.getElementById("edit-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  document.getElementById("set-goal-btn").addEventListener("click", openGoalModal);
+  document.getElementById("goal-cancel").addEventListener("click", closeGoalModal);
+  document.getElementById("goal-save").addEventListener("click", onGoalSave);
+  document.getElementById("goal-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeGoalModal();
+  });
+
+  document.getElementById("confirm-cancel").addEventListener("click", () => closeConfirm(false));
+  document.getElementById("confirm-ok").addEventListener("click", () => closeConfirm(true));
+  document.getElementById("confirm-modal").addEventListener("click", (e) => {
+    if (e.target === e.currentTarget) closeConfirm(false);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { closeModal(); closeConfirm(false); closeGoalModal(); }
+  });
 
   setDefaultDates();
   await refreshAll();
@@ -96,6 +146,7 @@ async function loadStats() {
   const stats = await apiRequest("/stats/weekly");
   document.getElementById("today-calories").textContent = stats.today_calories;
   document.getElementById("today-minutes").textContent = stats.today_workout_minutes;
+  updateProgressBar(stats.today_calories);
   renderChart(stats.days);
 }
 
@@ -156,11 +207,11 @@ async function handleListAction(e) {
 
   try {
     if (action === "delete-meal") {
-      if (!confirm("Delete this meal?")) return;
+      if (!await openConfirm("Delete this meal? This can't be undone.")) return;
       await apiRequest("/meals/" + id, { method: "DELETE" });
       showAlert(alertBox, "Meal deleted.", "success");
     } else if (action === "delete-workout") {
-      if (!confirm("Delete this workout?")) return;
+      if (!await openConfirm("Delete this workout? This can't be undone.")) return;
       await apiRequest("/workouts/" + id, { method: "DELETE" });
       showAlert(alertBox, "Workout deleted.", "success");
     } else if (action === "edit-meal") {
@@ -176,19 +227,23 @@ async function handleListAction(e) {
 
 async function editMeal(id, alertBox) {
   const meal = await apiRequest("/meals/" + id);
-  const name = prompt("Meal name:", meal.name);
-  if (name === null) return;
-  const caloriesStr = prompt("Calories:", String(meal.calories));
-  if (caloriesStr === null) return;
-  const logDate = prompt("Date (YYYY-MM-DD):", meal.log_date);
-  if (logDate === null) return;
+
+  document.getElementById("modal-title").textContent = "Edit meal";
+  document.getElementById("edit-meal-form").hidden = false;
+  document.getElementById("edit-workout-form").hidden = true;
+  document.getElementById("edit-meal-name").value = meal.name;
+  document.getElementById("edit-meal-calories").value = meal.calories;
+  document.getElementById("edit-meal-date").value = meal.log_date;
+
+  const confirmed = await openModal();
+  if (!confirmed) return;
 
   await apiRequest("/meals/" + id, {
     method: "PUT",
     body: JSON.stringify({
-      name: name.trim(),
-      calories: Number(caloriesStr),
-      log_date: logDate,
+      name: document.getElementById("edit-meal-name").value.trim(),
+      calories: Number(document.getElementById("edit-meal-calories").value),
+      log_date: document.getElementById("edit-meal-date").value,
     }),
   });
   showAlert(alertBox, "Meal updated.", "success");
@@ -196,22 +251,77 @@ async function editMeal(id, alertBox) {
 
 async function editWorkout(id, alertBox) {
   const workout = await apiRequest("/workouts/" + id);
-  const type = prompt("Workout type:", workout.workout_type);
-  if (type === null) return;
-  const durationStr = prompt("Duration (minutes):", String(workout.duration_minutes));
-  if (durationStr === null) return;
-  const logDate = prompt("Date (YYYY-MM-DD):", workout.log_date);
-  if (logDate === null) return;
+
+  document.getElementById("modal-title").textContent = "Edit workout";
+  document.getElementById("edit-workout-form").hidden = false;
+  document.getElementById("edit-meal-form").hidden = true;
+  document.getElementById("edit-workout-type").value = workout.workout_type;
+  document.getElementById("edit-workout-duration").value = workout.duration_minutes;
+  document.getElementById("edit-workout-date").value = workout.log_date;
+
+  const confirmed = await openModal();
+  if (!confirmed) return;
 
   await apiRequest("/workouts/" + id, {
     method: "PUT",
     body: JSON.stringify({
-      workout_type: type.trim(),
-      duration_minutes: Number(durationStr),
-      log_date: logDate,
+      workout_type: document.getElementById("edit-workout-type").value.trim(),
+      duration_minutes: Number(document.getElementById("edit-workout-duration").value),
+      log_date: document.getElementById("edit-workout-date").value,
     }),
   });
   showAlert(alertBox, "Workout updated.", "success");
+}
+
+function openModal() {
+  document.getElementById("edit-modal").hidden = false;
+  document.getElementById("modal-save").focus();
+  return new Promise((resolve) => { modalResolve = resolve; });
+}
+
+function closeModal() {
+  document.getElementById("edit-modal").hidden = true;
+  if (modalResolve) { modalResolve(false); modalResolve = null; }
+}
+
+function openGoalModal() {
+  document.getElementById("goal-input").value = getGoal();
+  document.getElementById("goal-modal").hidden = false;
+  document.getElementById("goal-input").focus();
+}
+
+function closeGoalModal() {
+  document.getElementById("goal-modal").hidden = true;
+}
+
+function onGoalSave() {
+  const input = document.getElementById("goal-input");
+  const val = Number(input.value);
+  if (!val || val < 500) { input.focus(); return; }
+  saveGoal(val);
+  closeGoalModal();
+  loadStats();
+}
+
+function openConfirm(message) {
+  document.getElementById("confirm-message").textContent = message;
+  document.getElementById("confirm-modal").hidden = false;
+  document.getElementById("confirm-ok").focus();
+  return new Promise((resolve) => { confirmResolve = resolve; });
+}
+
+function closeConfirm(result) {
+  document.getElementById("confirm-modal").hidden = true;
+  if (confirmResolve) { confirmResolve(result); confirmResolve = null; }
+}
+
+function saveModal() {
+  const mealForm = document.getElementById("edit-meal-form");
+  const workoutForm = document.getElementById("edit-workout-form");
+  const activeForm = mealForm.hidden ? workoutForm : mealForm;
+  if (!activeForm.reportValidity()) return;
+  document.getElementById("edit-modal").hidden = true;
+  if (modalResolve) { modalResolve(true); modalResolve = null; }
 }
 
 function renderChart(days) {
