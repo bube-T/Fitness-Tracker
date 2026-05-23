@@ -7,96 +7,61 @@
     <link rel="stylesheet" href="css/styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
   </head>
-  <body>
-    <main class="container">
-      <header class="dashboard-header">
-        <section>
-          <span class="brand">Health Tracker</span>
+  <body class="app-layout">
+    <aside id="sidebar" class="sidebar"></aside>
+
+    <main class="page-content">
+      <div class="container">
+        <header class="page-header">
           <h1>Dashboard</h1>
-          <p class="subtitle">Your nutrition and fitness at a glance.</p>
-        </section>
-        <section class="user-bar">
-          <span id="user-email"></span>
-          <button type="button" id="logout-btn" class="btn btn-ghost btn-sm">Log out</button>
-        </section>
-      </header>
+          <p>Your nutrition and fitness at a glance.</p>
+        </header>
 
-      <p id="alert" class="alert" hidden role="alert"></p>
+        <p id="alert" class="alert" hidden role="alert"></p>
 
-      <section class="stats-row">
-        <article class="stat-card">
-          <div class="stat-header-row">
-            <h3>Today&apos;s calories</h3>
-            <button type="button" id="set-goal-btn" class="btn-link">Edit goal</button>
-          </div>
-          <p>
-            <span id="today-calories">0</span>
-            <span class="stat-goal"> / <span id="calorie-goal-display">2000</span> kcal</span>
-          </p>
-          <div class="progress-track">
-            <div id="calorie-progress-bar" class="progress-fill"></div>
-          </div>
-        </article>
-        <article class="stat-card workout-stat">
-          <h3>Today&apos;s workout</h3>
-          <p><span id="today-minutes">0</span> min</p>
-        </article>
-      </section>
-
-      <section class="panel">
-        <h2>Last 7 days</h2>
-        <section class="chart-wrap">
-          <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
-        </section>
-      </section>
-
-      <section class="grid-2">
-        <section class="panel">
-          <h2>Log a meal</h2>
-          <form id="meal-form">
-            <p class="form-group">
-              <label for="meal-name">Meal name</label>
-              <input id="meal-name" required placeholder="e.g. Grilled chicken salad" />
+        <section class="stats-row">
+          <article class="stat-card">
+            <div class="stat-header-row">
+              <h3>Today&apos;s calories</h3>
+              <button type="button" id="set-goal-btn" class="btn-link">Edit goal</button>
+            </div>
+            <p>
+              <span id="today-calories">0</span>
+              <span class="stat-goal"> / <span id="calorie-goal-display">2000</span> kcal</span>
             </p>
-            <section class="form-row">
-              <p class="form-group">
-                <label for="meal-calories">Calories</label>
-                <input id="meal-calories" type="number" min="0" required />
-              </p>
-              <p class="form-group">
-                <label for="meal-date">Date</label>
-                <input id="meal-date" type="date" required />
-              </p>
-            </section>
-            <button type="submit" class="btn btn-secondary">Add meal</button>
-          </form>
-          <h2 style="margin-top: 1.5rem">Your meals</h2>
-          <section id="meal-list" class="list"></section>
+            <div class="progress-track">
+              <div id="calorie-progress-bar" class="progress-fill"></div>
+            </div>
+          </article>
+
+          <article class="stat-card workout-stat">
+            <h3>Today&apos;s workout</h3>
+            <p><span id="today-minutes">0</span> min</p>
+          </article>
         </section>
 
         <section class="panel">
-          <h2>Log a workout</h2>
-          <form id="workout-form">
-            <p class="form-group">
-              <label for="workout-type">Workout type</label>
-              <input id="workout-type" required placeholder="e.g. Running, Yoga" />
-            </p>
-            <section class="form-row">
-              <p class="form-group">
-                <label for="workout-duration">Duration (minutes)</label>
-                <input id="workout-duration" type="number" min="1" required />
-              </p>
-              <p class="form-group">
-                <label for="workout-date">Date</label>
-                <input id="workout-date" type="date" required />
-              </p>
-            </section>
-            <button type="submit" class="btn btn-secondary">Add workout</button>
-          </form>
-          <h2 style="margin-top: 1.5rem">Your workouts</h2>
-          <section id="workout-list" class="list"></section>
+          <h2>Last 7 days</h2>
+          <section class="chart-wrap">
+            <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
+          </section>
         </section>
-      </section>
+
+        <section class="quick-links">
+          <a href="meals.html" class="quick-link-card">
+            <strong>Log a meal</strong>
+            <span>Track your nutrition intake</span>
+          </a>
+          <a href="workouts.html" class="quick-link-card">
+            <strong>Log a workout</strong>
+            <span>Track your activity and progress</span>
+          </a>
+          <a href="profile.html" class="quick-link-card">
+            <strong>Settings</strong>
+            <span>Adjust your calorie goal</span>
+          </a>
+        </section>
+      </div>
     </main>
 
     <!-- Goal Modal -->
@@ -114,65 +79,9 @@
       </div>
     </div>
 
-    <!-- Confirm Modal -->
-    <div id="confirm-modal" class="modal-overlay" hidden aria-modal="true" role="dialog">
-      <div class="modal modal-sm">
-        <p id="confirm-message" class="confirm-message"></p>
-        <div class="modal-actions">
-          <button type="button" id="confirm-cancel" class="btn btn-ghost">Cancel</button>
-          <button type="button" id="confirm-ok" class="btn btn-danger">Delete</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Edit Modal -->
-    <div id="edit-modal" class="modal-overlay" hidden aria-modal="true" role="dialog">
-      <div class="modal">
-        <h2 id="modal-title" class="modal-title">Edit</h2>
-
-        <form id="edit-meal-form" hidden>
-          <p class="form-group">
-            <label for="edit-meal-name">Meal name</label>
-            <input id="edit-meal-name" required />
-          </p>
-          <section class="form-row">
-            <p class="form-group">
-              <label for="edit-meal-calories">Calories</label>
-              <input id="edit-meal-calories" type="number" min="0" required />
-            </p>
-            <p class="form-group">
-              <label for="edit-meal-date">Date</label>
-              <input id="edit-meal-date" type="date" required />
-            </p>
-          </section>
-        </form>
-
-        <form id="edit-workout-form" hidden>
-          <p class="form-group">
-            <label for="edit-workout-type">Workout type</label>
-            <input id="edit-workout-type" required />
-          </p>
-          <section class="form-row">
-            <p class="form-group">
-              <label for="edit-workout-duration">Duration (minutes)</label>
-              <input id="edit-workout-duration" type="number" min="1" required />
-            </p>
-            <p class="form-group">
-              <label for="edit-workout-date">Date</label>
-              <input id="edit-workout-date" type="date" required />
-            </p>
-          </section>
-        </form>
-
-        <div class="modal-actions">
-          <button type="button" id="modal-cancel" class="btn btn-ghost">Cancel</button>
-          <button type="button" id="modal-save" class="btn btn-secondary">Save changes</button>
-        </div>
-      </div>
-    </div>
-
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
     <script src="js/dashboard.js"></script>
   </body>
 </html>

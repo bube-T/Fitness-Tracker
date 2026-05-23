@@ -9,6 +9,7 @@
   --danger: #ef4444;
   --radius: 12px;
   --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  --sidebar-width: 220px;
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
@@ -22,6 +23,191 @@ body {
   background: radial-gradient(ellipse at top, #1e3a5f 0%, var(--bg) 55%);
   color: var(--text);
   line-height: 1.5;
+}
+
+/* Auth pages keep the full-page gradient; app pages use it only on the content area */
+body.app-layout {
+  background: var(--bg);
+  display: flex;
+}
+
+/* ── Sidebar ────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid rgba(148, 163, 184, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.sidebar-brand {
+  padding: 1.5rem 1.25rem 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--accent);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  flex-shrink: 0;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 0.925rem;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.sidebar-link:hover {
+  background: var(--surface-2);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.sidebar-link.active {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.sidebar-email {
+  font-size: 0.8rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Page content area ──────────────────────────────── */
+.page-content {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+  background: radial-gradient(ellipse at top, #1e3a5f 0%, var(--bg) 55%);
+  min-height: 100vh;
+}
+
+.page-header {
+  margin-bottom: 1.75rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* ── Quick-link cards on dashboard ─────────────────── */
+.quick-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.quick-link-card {
+  background: var(--surface);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.quick-link-card:hover {
+  background: var(--surface-2);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+
+.quick-link-card strong {
+  font-size: 1rem;
+  color: var(--accent-2);
+}
+
+.quick-link-card span {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* ── Mobile: sidebar becomes bottom nav ─────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    flex-direction: row;
+    align-items: stretch;
+    border-right: none;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    overflow: visible;
+  }
+
+  .sidebar-brand,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 0.4rem 0.25rem;
+    width: 100%;
+    gap: 0;
+  }
+
+  .sidebar-link {
+    flex-direction: column;
+    font-size: 0.7rem;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .page-content {
+    margin-left: 0;
+    padding-bottom: 5rem;
+  }
 }
 
 a {

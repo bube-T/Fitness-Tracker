@@ -1,6 +1,6 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from auth import get_current_user
@@ -13,6 +13,8 @@ router = APIRouter(prefix="/workouts", tags=["workouts"])
 
 @router.get("", response_model=list[WorkoutResponse])
 def list_workouts(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=200),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
@@ -20,6 +22,8 @@ def list_workouts(
         db.query(Workout)
         .filter(Workout.user_id == current_user.id)
         .order_by(Workout.log_date.desc(), Workout.id.desc())
+        .offset(skip)
+        .limit(limit)
         .all()
     )
 

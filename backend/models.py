@@ -1,6 +1,6 @@
 from datetime import date, datetime, timezone
 
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -20,6 +20,7 @@ class User(Base):
 
 class Meal(Base):
     __tablename__ = "meals"
+    __table_args__ = (Index("ix_meals_user_date", "user_id", "log_date"),)
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
@@ -32,6 +33,7 @@ class Meal(Base):
 
 class Workout(Base):
     __tablename__ = "workouts"
+    __table_args__ = (Index("ix_workouts_user_date", "user_id", "log_date"),)
 
     id = Column(Integer, primary_key=True, index=True)
     workout_type = Column(String, nullable=False)

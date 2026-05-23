@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workouts — Health Tracker</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="app-layout">
+    <aside id="sidebar" class="sidebar"></aside>
+
+    <main class="page-content">
+      <div class="container">
+        <header class="page-header">
+          <h1>Workouts</h1>
+          <p>Log and manage your fitness activity.</p>
+        </header>
+
+        <p id="alert" class="alert" hidden role="alert"></p>
+
+        <section class="panel">
+          <h2>Log a workout</h2>
+          <form id="workout-form">
+            <p class="form-group">
+              <label for="workout-type">Workout type</label>
+              <input id="workout-type" required placeholder="e.g. Running, Yoga, Cycling" />
+            </p>
+            <section class="form-row">
+              <p class="form-group">
+                <label for="workout-duration">Duration (minutes)</label>
+                <input id="workout-duration" type="number" min="1" max="600" required />
+              </p>
+              <p class="form-group">
+                <label for="workout-date">Date</label>
+                <input id="workout-date" type="date" required />
+              </p>
+            </section>
+            <button type="submit" class="btn btn-secondary">Add workout</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Workout history</h2>
+          <section id="workout-list" class="list"></section>
+        </section>
+      </div>
+    </main>
+
+    <!-- Edit Workout Modal -->
+    <div id="edit-modal" class="modal-overlay" hidden aria-modal="true" role="dialog">
+      <div class="modal">
+        <h2 class="modal-title">Edit workout</h2>
+        <form id="edit-workout-form">
+          <p class="form-group">
+            <label for="edit-workout-type">Workout type</label>
+            <input id="edit-workout-type" required />
+          </p>
+          <section class="form-row">
+            <p class="form-group">
+              <label for="edit-workout-duration">Duration (minutes)</label>
+              <input id="edit-workout-duration" type="number" min="1" max="600" required />
+            </p>
+            <p class="form-group">
+              <label for="edit-workout-date">Date</label>
+              <input id="edit-workout-date" type="date" required />
+            </p>
+          </section>
+        </form>
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel" class="btn btn-ghost">Cancel</button>
+          <button type="button" id="modal-save" class="btn btn-secondary">Save changes</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/workouts.js"></script>
+  </body>
+</html>
