@@ -128,6 +128,83 @@ body.app-layout {
   font-size: 0.9rem;
 }
 
+/* ── Macro details toggle in meal form ──────────────── */
+.macro-details {
+  margin-bottom: 1rem;
+}
+
+.macro-summary {
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--muted);
+  padding: 0.35rem 0;
+  list-style: none;
+  user-select: none;
+}
+
+.macro-summary::-webkit-details-marker { display: none; }
+
+.macro-summary::before {
+  content: "+ ";
+  color: var(--accent-2);
+}
+
+details[open] .macro-summary::before {
+  content: "- ";
+}
+
+.macro-summary-hint {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.form-row-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ── Macro summary panel on dashboard ───────────────── */
+.macros-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.macro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.9rem 1rem;
+  background: #0f172a;
+  border-radius: 8px;
+  border-left: 3px solid transparent;
+}
+
+.macro-protein { border-left-color: #3b82f6; }
+.macro-carbs   { border-left-color: #f59e0b; }
+.macro-fat     { border-left-color: #ec4899; }
+
+.macro-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.macro-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.macro-protein .macro-value { color: #3b82f6; }
+.macro-carbs   .macro-value { color: #f59e0b; }
+.macro-fat     .macro-value { color: #ec4899; }
+
+@media (max-width: 480px) {
+  .macros-grid { grid-template-columns: 1fr; }
+  .form-row-3  { grid-template-columns: 1fr; }
+}
+
 /* ── Quick-link cards on dashboard ─────────────────── */
 .quick-links {
   display: grid;
@@ -379,6 +456,20 @@ input:focus {
 
 .stat-card.workout-stat p {
   color: var(--accent-2);
+}
+
+.stat-card.streak-stat p {
+  color: #f59e0b;
+}
+
+.stat-card.weight-stat p {
+  color: #a78bfa;
+}
+
+.stat-unit {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--muted);
 }
 
 .panel {

@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(venv\\\\Scripts\\\\python.exe -m uvicorn main:app --reload --port 8000)"
+      "Bash(venv\\\\Scripts\\\\python.exe -m uvicorn main:app --reload --port 8000)",
+      "Bash(venv/Scripts/pytest tests/test_stats.py -v)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/test_stats.py -v)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/)",
+      "Bash(venv/Scripts/python.exe -m pytest tests/ -v)"
     ]
   }
 }

@@ -38,6 +38,16 @@
             <h3>Today&apos;s workout</h3>
             <p><span id="today-minutes">0</span> min</p>
           </article>
+
+          <article class="stat-card streak-stat">
+            <h3>Current streak</h3>
+            <p><span id="current-streak">0</span> <span class="stat-unit">days</span></p>
+          </article>
+
+          <article class="stat-card weight-stat" id="weight-stat-card" hidden>
+            <h3>Latest weight</h3>
+            <p><span id="latest-weight">—</span> <span class="stat-unit">kg</span></p>
+          </article>
         </section>
 
         <section class="panel">
@@ -45,6 +55,24 @@
           <section class="chart-wrap">
             <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
           </section>
+        </section>
+
+        <section class="panel macros-panel" id="macros-panel" hidden>
+          <h2>Today&apos;s macros</h2>
+          <div class="macros-grid">
+            <div class="macro-item macro-protein">
+              <span class="macro-label">Protein</span>
+              <span class="macro-value"><span id="today-protein">0</span>g</span>
+            </div>
+            <div class="macro-item macro-carbs">
+              <span class="macro-label">Carbs</span>
+              <span class="macro-value"><span id="today-carbs">0</span>g</span>
+            </div>
+            <div class="macro-item macro-fat">
+              <span class="macro-label">Fat</span>
+              <span class="macro-value"><span id="today-fat">0</span>g</span>
+            </div>
+          </div>
         </section>
 
         <section class="quick-links">

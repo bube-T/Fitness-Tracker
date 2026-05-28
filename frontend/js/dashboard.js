@@ -46,8 +46,25 @@ async function loadStats() {
     const stats = await apiRequest("/stats/weekly");
     document.getElementById("today-calories").textContent = stats.today_calories;
     document.getElementById("today-minutes").textContent = stats.today_workout_minutes;
+    document.getElementById("current-streak").textContent = stats.current_streak;
+    const weightCard = document.getElementById("weight-stat-card");
+    if (stats.latest_weight_kg != null) {
+      document.getElementById("latest-weight").textContent = stats.latest_weight_kg;
+      weightCard.hidden = false;
+    } else {
+      weightCard.hidden = true;
+    }
     updateProgressBar(stats.today_calories);
     renderChart(stats.days);
+
+    const hasMacros = stats.today_protein_g > 0 || stats.today_carbs_g > 0 || stats.today_fat_g > 0;
+    const macrosPanel = document.getElementById("macros-panel");
+    macrosPanel.hidden = !hasMacros;
+    if (hasMacros) {
+      document.getElementById("today-protein").textContent = stats.today_protein_g;
+      document.getElementById("today-carbs").textContent = stats.today_carbs_g;
+      document.getElementById("today-fat").textContent = stats.today_fat_g;
+    }
   } catch (err) {
     showAlert(document.getElementById("alert"), err.message, "error");
   }

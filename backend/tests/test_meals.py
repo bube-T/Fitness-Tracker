@@ -12,6 +12,40 @@ def test_create_meal(client, auth_headers):
     assert data["name"] == "Oatmeal"
     assert data["calories"] == 300
     assert data["log_date"] == "2024-01-15"
+    assert data["protein_g"] is None
+    assert data["carbs_g"] is None
+    assert data["fat_g"] is None
+
+
+def test_create_meal_with_macros(client, auth_headers):
+    r = client.post(
+        "/meals",
+        json={"name": "Chicken", "calories": 400, "protein_g": 45, "carbs_g": 10, "fat_g": 12},
+        headers=auth_headers,
+    )
+    assert r.status_code == 201
+    data = r.json()
+    assert data["protein_g"] == 45
+    assert data["carbs_g"] == 10
+    assert data["fat_g"] == 12
+
+
+def test_update_meal_macros(client, auth_headers):
+    meal_id = client.post(
+        "/meals", json={"name": "Oatmeal", "calories": 300}, headers=auth_headers
+    ).json()["id"]
+    r = client.put(f"/meals/{meal_id}", json={"protein_g": 10, "carbs_g": 55}, headers=auth_headers)
+    assert r.status_code == 200
+    assert r.json()["protein_g"] == 10
+    assert r.json()["carbs_g"] == 55
+    assert r.json()["fat_g"] is None
+
+
+def test_create_meal_invalid_macro(client, auth_headers):
+    r = client.post(
+        "/meals", json={"name": "X", "calories": 300, "protein_g": -5}, headers=auth_headers
+    )
+    assert r.status_code == 422
 
 
 def test_create_meal_defaults_to_today(client, auth_headers):

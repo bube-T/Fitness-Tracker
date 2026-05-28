@@ -23,6 +23,11 @@ function setDefaultDate() {
   if (input && !input.value) input.value = todayIso();
 }
 
+function parseMacro(id) {
+  const val = Number(document.getElementById(id).value);
+  return Number.isFinite(val) && val >= 0 ? val : null;
+}
+
 async function onMealSubmit(e) {
   e.preventDefault();
   const alertBox = document.getElementById("alert");
@@ -32,6 +37,9 @@ async function onMealSubmit(e) {
       body: JSON.stringify({
         name: document.getElementById("meal-name").value.trim(),
         calories: Number(document.getElementById("meal-calories").value),
+        protein_g: parseMacro("meal-protein"),
+        carbs_g: parseMacro("meal-carbs"),
+        fat_g: parseMacro("meal-fat"),
         log_date: document.getElementById("meal-date").value || undefined,
       }),
     });
@@ -56,12 +64,21 @@ async function loadMeals() {
   }
 }
 
+function renderMacroLine(meal) {
+  if (meal.protein_g == null && meal.carbs_g == null && meal.fat_g == null) return "";
+  const parts = [];
+  if (meal.protein_g != null) parts.push("P " + meal.protein_g + "g");
+  if (meal.carbs_g  != null) parts.push("C " + meal.carbs_g  + "g");
+  if (meal.fat_g    != null) parts.push("F " + meal.fat_g    + "g");
+  return " · " + parts.join(" · ");
+}
+
 function renderMealRow(meal) {
   return (
     '<article class="list-item" data-id="' + meal.id + '">' +
     '<div class="list-item-main">' +
     "<strong>" + escapeHtml(meal.name) + "</strong>" +
-    "<span>" + meal.calories + " kcal · " + meal.log_date + "</span>" +
+    "<span>" + meal.calories + " kcal" + renderMacroLine(meal) + " · " + meal.log_date + "</span>" +
     "</div>" +
     '<div class="list-actions">' +
     '<button type="button" class="btn btn-ghost btn-sm" data-action="edit">Edit</button>' +
@@ -77,7 +94,7 @@ async function handleListAction(e) {
   const alertBox = document.getElementById("alert");
   try {
     if (btn.dataset.action === "delete") {
-      if (!await openConfirm("Delete this meal? This can’t be undone.")) return;
+      if (!await openConfirm("Delete this meal? This can't be undone.")) return;
       await apiRequest("/meals/" + id, { method: "DELETE" });
       showAlert(alertBox, "Meal deleted.", "success");
     } else {
@@ -89,11 +106,25 @@ async function handleListAction(e) {
   }
 }
 
+function setMacroInput(id, val) {
+  document.getElementById(id).value = val != null ? val : "";
+}
+
+function parseMacroEdit(id) {
+  const raw = document.getElementById(id).value;
+  if (raw === "" || raw == null) return null;
+  const val = Number(raw);
+  return Number.isFinite(val) && val >= 0 ? val : null;
+}
+
 async function editMeal(id, alertBox) {
   const meal = await apiRequest("/meals/" + id);
   document.getElementById("edit-meal-name").value = meal.name;
   document.getElementById("edit-meal-calories").value = meal.calories;
   document.getElementById("edit-meal-date").value = meal.log_date;
+  setMacroInput("edit-meal-protein", meal.protein_g);
+  setMacroInput("edit-meal-carbs",   meal.carbs_g);
+  setMacroInput("edit-meal-fat",     meal.fat_g);
 
   const confirmed = await openModal();
   if (!confirmed) return;
@@ -103,7 +134,10 @@ async function editMeal(id, alertBox) {
     body: JSON.stringify({
       name: document.getElementById("edit-meal-name").value.trim(),
       calories: Number(document.getElementById("edit-meal-calories").value),
-      log_date: document.getElementById("edit-meal-date").value,
+      protein_g: parseMacroEdit("edit-meal-protein"),
+      carbs_g:   parseMacroEdit("edit-meal-carbs"),
+      fat_g:     parseMacroEdit("edit-meal-fat"),
+      log_date:  document.getElementById("edit-meal-date").value,
     }),
   });
   showAlert(alertBox, "Meal updated.", "success");

@@ -35,6 +35,23 @@
                 <input id="meal-date" type="date" required />
               </p>
             </section>
+            <details class="macro-details">
+              <summary class="macro-summary">Add macros <span class="macro-summary-hint">(optional)</span></summary>
+              <section class="form-row form-row-3">
+                <p class="form-group">
+                  <label for="meal-protein">Protein (g)</label>
+                  <input id="meal-protein" type="number" min="0" max="500" placeholder="0" />
+                </p>
+                <p class="form-group">
+                  <label for="meal-carbs">Carbs (g)</label>
+                  <input id="meal-carbs" type="number" min="0" max="1000" placeholder="0" />
+                </p>
+                <p class="form-group">
+                  <label for="meal-fat">Fat (g)</label>
+                  <input id="meal-fat" type="number" min="0" max="500" placeholder="0" />
+                </p>
+              </section>
+            </details>
             <button type="submit" class="btn btn-secondary">Add meal</button>
           </form>
         </section>
@@ -63,6 +80,20 @@
             <p class="form-group">
               <label for="edit-meal-date">Date</label>
               <input id="edit-meal-date" type="date" required />
+            </p>
+          </section>
+          <section class="form-row form-row-3">
+            <p class="form-group">
+              <label for="edit-meal-protein">Protein (g)</label>
+              <input id="edit-meal-protein" type="number" min="0" max="500" placeholder="—" />
+            </p>
+            <p class="form-group">
+              <label for="edit-meal-carbs">Carbs (g)</label>
+              <input id="edit-meal-carbs" type="number" min="0" max="1000" placeholder="—" />
+            </p>
+            <p class="form-group">
+              <label for="edit-meal-fat">Fat (g)</label>
+              <input id="edit-meal-fat" type="number" min="0" max="500" placeholder="—" />
             </p>
           </section>
         </form>

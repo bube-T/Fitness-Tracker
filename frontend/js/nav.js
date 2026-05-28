@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: "dashboard.html", label: "Dashboard" },
   { href: "meals.html",     label: "Meals" },
   { href: "workouts.html",  label: "Workouts" },
+  { href: "weight.html",    label: "Weight" },
   { href: "profile.html",   label: "Profile" },
 ];
 

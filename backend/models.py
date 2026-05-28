@@ -1,6 +1,6 @@
 from datetime import date, datetime, timezone
 
-from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, String
+from sqlalchemy import Column, Date, DateTime, Float, ForeignKey, Index, Integer, String
 from sqlalchemy.orm import relationship
 
 from database import Base
@@ -16,6 +16,7 @@ class User(Base):
 
     meals = relationship("Meal", back_populates="owner", cascade="all, delete-orphan")
     workouts = relationship("Workout", back_populates="owner", cascade="all, delete-orphan")
+    weight_entries = relationship("WeightEntry", back_populates="owner", cascade="all, delete-orphan")
 
 
 class Meal(Base):
@@ -25,6 +26,9 @@ class Meal(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     calories = Column(Integer, nullable=False)
+    protein_g = Column(Integer, nullable=True)
+    carbs_g = Column(Integer, nullable=True)
+    fat_g = Column(Integer, nullable=True)
     log_date = Column(Date, nullable=False, default=date.today)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
@@ -42,3 +46,15 @@ class Workout(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     owner = relationship("User", back_populates="workouts")
+
+
+class WeightEntry(Base):
+    __tablename__ = "weight_entries"
+    __table_args__ = (Index("ix_weight_user_date", "user_id", "log_date"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    weight_kg = Column(Float, nullable=False)
+    log_date = Column(Date, nullable=False, default=date.today)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+
+    owner = relationship("User", back_populates="weight_entries")

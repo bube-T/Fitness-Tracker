@@ -37,6 +37,9 @@ def create_meal(
     meal = Meal(
         name=meal_in.name,
         calories=meal_in.calories,
+        protein_g=meal_in.protein_g,
+        carbs_g=meal_in.carbs_g,
+        fat_g=meal_in.fat_g,
         log_date=meal_in.log_date or date.today(),
         user_id=current_user.id,
     )
