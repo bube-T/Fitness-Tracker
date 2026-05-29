@@ -3,11 +3,11 @@
 let _confirmResolve = null;
 
 const NAV_LINKS = [
-  { href: "dashboard.html", label: "Dashboard" },
-  { href: "meals.html",     label: "Meals" },
-  { href: "workouts.html",  label: "Workouts" },
-  { href: "weight.html",    label: "Weight" },
-  { href: "profile.html",   label: "Profile" },
+  { href: "dashboard.html",  label: "Dashboard",  icon: "dashboard" },
+  { href: "meals.html",      label: "Meals",       icon: "restaurant" },
+  { href: "workouts.html",   label: "Workouts",    icon: "fitness_center" },
+  { href: "weight.html",     label: "Weight",      icon: "monitor_weight" },
+  { href: "profile.html",    label: "Profile",     icon: "person" },
 ];
 
 function renderNav(activePage) {
@@ -15,34 +15,38 @@ function renderNav(activePage) {
 
   const sidebar = document.getElementById("sidebar");
   sidebar.innerHTML =
-    '<div class="sidebar-brand">Health Tracker</div>' +
+    '<div class="sidebar-brand">' +
+      '<span class="sidebar-brand-name">VITALITY</span>' +
+      '<span class="sidebar-brand-sub">Elite Performance</span>' +
+    '</div>' +
     '<nav class="sidebar-nav">' +
     NAV_LINKS.map(function (l) {
       return (
         '<a href="' + l.href + '" class="sidebar-link' +
         (l.href === activePage ? " active" : "") + '">' +
+        '<span class="material-symbols-outlined">' + l.icon + '</span>' +
         l.label + "</a>"
       );
     }).join("") +
     "</nav>" +
     '<div class="sidebar-footer">' +
-    '<span id="sidebar-email" class="sidebar-email"></span>' +
-    '<button type="button" id="sidebar-logout" class="btn btn-ghost btn-sm">Log out</button>' +
+      '<span id="sidebar-email" class="sidebar-email"></span>' +
+      '<button type="button" id="sidebar-logout" class="btn btn-ghost btn-sm">Log out</button>' +
     "</div>";
 
   document.getElementById("sidebar-logout").addEventListener("click", logout);
 
-  // Inject the shared confirm modal once per page
+  // Inject shared confirm modal once per page
   if (!document.getElementById("confirm-modal")) {
     document.body.insertAdjacentHTML(
       "beforeend",
       '<div id="confirm-modal" class="modal-overlay" hidden role="dialog" aria-modal="true">' +
         '<div class="modal modal-sm">' +
-        '<p id="confirm-message" class="confirm-message"></p>' +
-        '<div class="modal-actions">' +
-        '<button type="button" id="confirm-cancel" class="btn btn-ghost">Cancel</button>' +
-        '<button type="button" id="confirm-ok" class="btn btn-danger">Delete</button>' +
-        "</div></div></div>"
+          '<p id="confirm-message" class="confirm-message"></p>' +
+          '<div class="modal-actions">' +
+            '<button type="button" id="confirm-cancel" class="btn btn-ghost">Cancel</button>' +
+            '<button type="button" id="confirm-ok" class="btn btn-danger">Delete</button>' +
+          "</div></div></div>"
     );
     document.getElementById("confirm-cancel").addEventListener("click", function () { closeConfirm(false); });
     document.getElementById("confirm-ok").addEventListener("click", function () { closeConfirm(true); });
@@ -60,6 +64,17 @@ function renderNav(activePage) {
       if (el) el.textContent = user.email;
     })
     .catch(function () { logout(); });
+
+  // Mouse-tracking glow on glass cards
+  document.addEventListener("mousemove", function (e) {
+    document.querySelectorAll(".stat-card, .panel, .quick-link-card, .card").forEach(function (card) {
+      var rect = card.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      card.style.setProperty("--glow-x", x + "px");
+      card.style.setProperty("--glow-y", y + "px");
+    });
+  });
 }
 
 function openConfirm(message) {

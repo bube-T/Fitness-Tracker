@@ -105,13 +105,13 @@ function renderChart(days) {
         {
           label: "Calories",
           data: calories,
-          backgroundColor: "rgba(16, 185, 129, 0.7)",
+          backgroundColor: "rgba(199, 242, 132, 0.7)",
           borderRadius: 6,
         },
         {
           label: "Workout (min)",
           data: minutes,
-          backgroundColor: "rgba(59, 130, 246, 0.7)",
+          backgroundColor: "rgba(96, 165, 250, 0.65)",
           borderRadius: 6,
         },
       ],
@@ -119,10 +119,10 @@ function renderChart(days) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: "#e2e8f0" } } },
+      plugins: { legend: { labels: { color: "rgba(255,255,255,0.6)" } } },
       scales: {
-        x: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(148, 163, 184, 0.15)" } },
-        y: { beginAtZero: true, ticks: { color: "#94a3b8" }, grid: { color: "rgba(148, 163, 184, 0.15)" } },
+        x: { ticks: { color: "rgba(255,255,255,0.4)" }, grid: { color: "rgba(255,255,255,0.06)" } },
+        y: { beginAtZero: true, ticks: { color: "rgba(255,255,255,0.4)" }, grid: { color: "rgba(255,255,255,0.06)" } },
       },
     },
   });

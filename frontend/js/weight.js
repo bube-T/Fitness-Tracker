@@ -133,10 +133,10 @@ function renderChart(entries) {
       datasets: [{
         label: "Weight (kg)",
         data,
-        borderColor: "#10b981",
-        backgroundColor: "rgba(16, 185, 129, 0.08)",
+        borderColor: "#C7F284",
+        backgroundColor: "rgba(199, 242, 132, 0.08)",
         borderWidth: 2,
-        pointBackgroundColor: "#10b981",
+        pointBackgroundColor: "#C7F284",
         pointRadius: 4,
         tension: 0.3,
         fill: true,
@@ -145,10 +145,10 @@ function renderChart(entries) {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: "#e2e8f0" } } },
+      plugins: { legend: { labels: { color: "rgba(255,255,255,0.6)" } } },
       scales: {
-        x: { ticks: { color: "#94a3b8", maxTicksLimit: 10 }, grid: { color: "rgba(148, 163, 184, 0.15)" } },
-        y: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(148, 163, 184, 0.15)" } },
+        x: { ticks: { color: "rgba(255,255,255,0.4)", maxTicksLimit: 10 }, grid: { color: "rgba(255,255,255,0.06)" } },
+        y: { ticks: { color: "rgba(255,255,255,0.4)" }, grid: { color: "rgba(255,255,255,0.06)" } },
       },
     },
   });
