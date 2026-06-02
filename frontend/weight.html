@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weight — VITALITY</title>
+    <title>Weight â€” APEX</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>âš¡</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="css/styles.css" />
@@ -20,6 +21,26 @@
         </header>
 
         <p id="alert" class="alert" hidden role="alert"></p>
+
+        <!-- Weight stats summary -->
+        <div class="weight-stats-grid" id="weight-stats-grid" hidden>
+          <div class="weight-stat-mini">
+            <h4>Current</h4>
+            <p><span id="ws-current">â€”</span><span class="ws-unit"> kg</span></p>
+          </div>
+          <div class="weight-stat-mini">
+            <h4>Lowest</h4>
+            <p><span id="ws-lowest">â€”</span><span class="ws-unit"> kg</span></p>
+          </div>
+          <div class="weight-stat-mini">
+            <h4>Highest</h4>
+            <p><span id="ws-highest">â€”</span><span class="ws-unit"> kg</span></p>
+          </div>
+          <div class="weight-stat-mini">
+            <h4>30-day change</h4>
+            <p><span id="ws-change">â€”</span><span class="ws-unit"> kg</span></p>
+          </div>
+        </div>
 
         <section class="panel">
           <h2>Log weight</h2>
@@ -78,6 +99,9 @@
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/chat.js"></script>
     <script src="js/weight.js"></script>
   </body>
 </html>
+
+

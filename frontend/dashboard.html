@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard — VITALITY</title>
+    <title>Dashboard â€” APEX</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>âš¡</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="css/styles.css" />
@@ -14,17 +15,20 @@
 
     <main class="page-content">
       <div class="container">
-        <header class="page-header">
-          <h1>Dashboard</h1>
-          <p>Your nutrition and fitness at a glance.</p>
-        </header>
 
         <p id="alert" class="alert" hidden role="alert"></p>
 
+        <!-- Personalized greeting -->
+        <header class="dash-greeting">
+          <h1 id="greeting-title">Welcome back.</h1>
+          <p id="greeting-sub" class="greeting-sub"></p>
+        </header>
+
+        <!-- 3 stat cards -->
         <section class="stats-row">
           <article class="stat-card">
             <div class="stat-header-row">
-              <h3>Today&apos;s calories</h3>
+              <h3>Daily Calories</h3>
               <button type="button" id="set-goal-btn" class="btn-link">Edit goal</button>
             </div>
             <p>
@@ -37,60 +41,42 @@
           </article>
 
           <article class="stat-card workout-stat">
-            <h3>Today&apos;s workout</h3>
-            <p><span id="today-minutes">0</span> min</p>
+            <h3>Workout Time</h3>
+            <p><span id="today-minutes">0</span> <span class="stat-unit">min</span></p>
           </article>
 
-          <article class="stat-card streak-stat">
-            <h3>Current streak</h3>
-            <p><span id="current-streak">0</span> <span class="stat-unit">days</span></p>
-          </article>
-
-          <article class="stat-card weight-stat" id="weight-stat-card" hidden>
-            <h3>Latest weight</h3>
-            <p><span id="latest-weight">—</span> <span class="stat-unit">kg</span></p>
+          <article class="stat-card weight-stat">
+            <h3>Current Weight</h3>
+            <p><span id="latest-weight">â€”</span> <span class="stat-unit">kg</span></p>
           </article>
         </section>
 
-        <section class="panel">
-          <h2>Last 7 days</h2>
-          <section class="chart-wrap">
-            <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
+        <!-- Charts -->
+        <div class="grid-2">
+          <section class="panel">
+            <h2>7-Day History</h2>
+            <div class="chart-wrap">
+              <canvas id="weekly-chart" aria-label="Weekly calories and workout minutes"></canvas>
+            </div>
           </section>
-        </section>
 
-        <section class="panel macros-panel" id="macros-panel" hidden>
-          <h2>Today&apos;s macros</h2>
-          <div class="macros-grid">
-            <div class="macro-item macro-protein">
-              <span class="macro-label">Protein</span>
-              <span class="macro-value"><span id="today-protein">0</span>g</span>
+          <section class="panel" id="macro-donut-panel" hidden>
+            <h2>Macro Distribution</h2>
+            <div class="donut-wrap">
+              <canvas id="macro-donut" aria-label="Today's macro distribution"></canvas>
             </div>
-            <div class="macro-item macro-carbs">
-              <span class="macro-label">Carbs</span>
-              <span class="macro-value"><span id="today-carbs">0</span>g</span>
-            </div>
-            <div class="macro-item macro-fat">
-              <span class="macro-label">Fat</span>
-              <span class="macro-value"><span id="today-fat">0</span>g</span>
-            </div>
+            <div class="donut-legend" id="donut-legend"></div>
+          </section>
+        </div>
+
+        <!-- Recent Activity -->
+        <section class="panel">
+          <h2>Recent Activity</h2>
+          <div id="activity-list" class="activity-list">
+            <p class="empty">No recent activity yet.</p>
           </div>
         </section>
 
-        <section class="quick-links">
-          <a href="meals.html" class="quick-link-card">
-            <strong>Log a meal</strong>
-            <span>Track your nutrition intake</span>
-          </a>
-          <a href="workouts.html" class="quick-link-card">
-            <strong>Log a workout</strong>
-            <span>Track your activity and progress</span>
-          </a>
-          <a href="profile.html" class="quick-link-card">
-            <strong>Settings</strong>
-            <span>Adjust your calorie goal</span>
-          </a>
-        </section>
       </div>
     </main>
 
@@ -112,6 +98,9 @@
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/chat.js"></script>
     <script src="js/dashboard.js"></script>
   </body>
 </html>
+
+

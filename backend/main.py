@@ -2,17 +2,23 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from database import Base, engine
-from routers import auth, meals, stats, weight, workouts
+from limiter import limiter
+from routers import auth, chat, meals, stats, weight, workouts
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Health Tracker API",
-    description="Meal & Workout Tracker — portfolio full-stack project",
+    title="APEX API",
+    description="Health & fitness tracker — portfolio project",
     version="1.0.0",
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 default_origins = [
     "http://127.0.0.1:5500",
@@ -38,6 +44,7 @@ app.include_router(meals.router)
 app.include_router(workouts.router)
 app.include_router(weight.router)
 app.include_router(stats.router)
+app.include_router(chat.router)
 
 
 @app.get("/")

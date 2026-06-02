@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: health-tracker-api
+    name: vitality-api
     runtime: python
     rootDir: backend
     buildCommand: pip install -r requirements.txt
@@ -10,11 +10,11 @@ services:
         generateValue: true
       - key: DATABASE_URL
         fromDatabase:
-          name: health-tracker-db
+          name: vitality-db
           property: connectionString
       - key: ALLOWED_ORIGINS
         sync: false
 
 databases:
-  - name: health-tracker-db
+  - name: vitality-db
     plan: free

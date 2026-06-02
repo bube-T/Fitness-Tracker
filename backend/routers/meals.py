@@ -37,6 +37,7 @@ def create_meal(
     meal = Meal(
         name=meal_in.name,
         calories=meal_in.calories,
+        meal_type=meal_in.meal_type,
         protein_g=meal_in.protein_g,
         carbs_g=meal_in.carbs_g,
         fat_g=meal_in.fat_g,

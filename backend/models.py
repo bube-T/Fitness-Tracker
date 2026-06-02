@@ -26,6 +26,7 @@ class Meal(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     calories = Column(Integer, nullable=False)
+    meal_type = Column(String, nullable=True)
     protein_g = Column(Integer, nullable=True)
     carbs_g = Column(Integer, nullable=True)
     fat_g = Column(Integer, nullable=True)

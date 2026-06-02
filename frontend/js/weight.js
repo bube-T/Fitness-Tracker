@@ -51,9 +51,41 @@ async function loadHistory() {
     if (!entries.length) { panel.hidden = true; return; }
     panel.hidden = false;
     renderChart(entries);
+    renderStats(entries);
   } catch (err) {
     showAlert(document.getElementById("alert"), err.message, "error");
   }
+}
+
+function renderStats(entries) {
+  if (!entries.length) return;
+  const grid    = document.getElementById("weight-stats-grid");
+  const weights = entries.map((e) => e.weight_kg);
+  const current = weights[weights.length - 1];
+  const lowest  = Math.min(...weights);
+  const highest = Math.max(...weights);
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const oldEntries = entries.filter((e) => new Date(e.log_date) <= thirtyDaysAgo);
+  const baseline   = oldEntries.length ? oldEntries[oldEntries.length - 1].weight_kg : null;
+  const change     = baseline != null ? (current - baseline) : null;
+
+  document.getElementById("ws-current").textContent = current.toFixed(1);
+  document.getElementById("ws-lowest").textContent  = lowest.toFixed(1);
+  document.getElementById("ws-highest").textContent = highest.toFixed(1);
+
+  const changeEl = document.getElementById("ws-change");
+  if (change != null) {
+    const sign = change > 0 ? "+" : "";
+    changeEl.textContent = sign + change.toFixed(1);
+    changeEl.className   = change > 0 ? "ws-positive" : change < 0 ? "ws-negative" : "";
+  } else {
+    changeEl.textContent = "—";
+    changeEl.className   = "";
+  }
+
+  grid.hidden = false;
 }
 
 async function loadList() {
@@ -133,10 +165,10 @@ function renderChart(entries) {
       datasets: [{
         label: "Weight (kg)",
         data,
-        borderColor: "#C7F284",
-        backgroundColor: "rgba(199, 242, 132, 0.08)",
+        borderColor: "#3B82F6",
+        backgroundColor: "rgba(59, 130, 246, 0.08)",
         borderWidth: 2,
-        pointBackgroundColor: "#C7F284",
+        pointBackgroundColor: "#3B82F6",
         pointRadius: 4,
         tension: 0.3,
         fill: true,

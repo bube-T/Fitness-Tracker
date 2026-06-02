@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class UserCreate(BaseModel):
@@ -21,22 +21,41 @@ class Token(BaseModel):
     token_type: str = "bearer"
 
 
+MEAL_TYPES = {"breakfast", "lunch", "dinner", "snack"}
+
+
 class MealCreate(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     calories: int = Field(ge=0, le=10000)
+    meal_type: str | None = None
     protein_g: int | None = Field(default=None, ge=0, le=500)
     carbs_g: int | None = Field(default=None, ge=0, le=1000)
     fat_g: int | None = Field(default=None, ge=0, le=500)
     log_date: date | None = None
+
+    @field_validator("meal_type")
+    @classmethod
+    def validate_meal_type(cls, v):
+        if v is not None and v not in MEAL_TYPES:
+            raise ValueError("meal_type must be one of: " + ", ".join(sorted(MEAL_TYPES)))
+        return v
 
 
 class MealUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=200)
     calories: int | None = Field(default=None, ge=0, le=10000)
+    meal_type: str | None = None
     protein_g: int | None = Field(default=None, ge=0, le=500)
     carbs_g: int | None = Field(default=None, ge=0, le=1000)
     fat_g: int | None = Field(default=None, ge=0, le=500)
     log_date: date | None = None
+
+    @field_validator("meal_type")
+    @classmethod
+    def validate_meal_type(cls, v):
+        if v is not None and v not in MEAL_TYPES:
+            raise ValueError("meal_type must be one of: " + ", ".join(sorted(MEAL_TYPES)))
+        return v
 
 
 class MealResponse(BaseModel):
@@ -45,6 +64,7 @@ class MealResponse(BaseModel):
     id: int
     name: str
     calories: int
+    meal_type: str | None = None
     protein_g: int | None = None
     carbs_g: int | None = None
     fat_g: int | None = None

@@ -1,9 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meals — VITALITY</title>
+    <title>Meals â€” APEX</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>âš¡</text></svg>" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="css/styles.css" />
@@ -14,19 +15,51 @@
     <main class="page-content">
       <div class="container">
         <header class="page-header">
-          <h1>Meals</h1>
+          <h1>Nutrition Entry</h1>
           <p>Log and manage your daily nutrition.</p>
         </header>
 
         <p id="alert" class="alert" hidden role="alert"></p>
 
+        <!-- Macro goal progress bars -->
+        <div class="macro-bars-row" id="macro-bars-row">
+          <div class="macro-bar-card">
+            <div class="macro-bar-label">Protein</div>
+            <div class="macro-bar-values"><span id="mb-protein">0</span>g <span>/ <span id="mb-protein-goal">150</span>g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill protein" id="mb-protein-fill" style="width:0%"></div></div>
+          </div>
+          <div class="macro-bar-card">
+            <div class="macro-bar-label">Carbs</div>
+            <div class="macro-bar-values"><span id="mb-carbs">0</span>g <span>/ <span id="mb-carbs-goal">250</span>g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill carbs" id="mb-carbs-fill" style="width:0%"></div></div>
+          </div>
+          <div class="macro-bar-card">
+            <div class="macro-bar-label">Fat</div>
+            <div class="macro-bar-values"><span id="mb-fat">0</span>g <span>/ <span id="mb-fat-goal">70</span>g</span></div>
+            <div class="macro-bar-track"><div class="macro-bar-fill fat" id="mb-fat-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+
+        <!-- Log form -->
         <section class="panel">
           <h2>Log a meal</h2>
           <form id="meal-form">
-            <p class="form-group">
-              <label for="meal-name">Meal name</label>
-              <input id="meal-name" required placeholder="e.g. Grilled chicken salad" />
-            </p>
+            <div class="form-row">
+              <p class="form-group">
+                <label for="meal-name">Meal name</label>
+                <input id="meal-name" required placeholder="e.g. Grilled chicken salad" />
+              </p>
+              <p class="form-group">
+                <label for="meal-type-select">Meal type</label>
+                <select id="meal-type-select" class="meal-type-select">
+                  <option value="">â€” Select type â€”</option>
+                  <option value="breakfast">Breakfast</option>
+                  <option value="lunch">Lunch</option>
+                  <option value="dinner">Dinner</option>
+                  <option value="snack">Snack</option>
+                </select>
+              </p>
+            </div>
             <section class="form-row">
               <p class="form-group">
                 <label for="meal-calories">Calories</label>
@@ -58,8 +91,15 @@
           </form>
         </section>
 
+        <!-- Today's meals grouped by category -->
         <section class="panel">
-          <h2>Meal history</h2>
+          <h2>Today's Log</h2>
+          <div class="meal-categories-grid" id="meal-categories"></div>
+        </section>
+
+        <!-- History -->
+        <section class="panel">
+          <h2>History</h2>
           <section id="meal-list" class="list"></section>
         </section>
       </div>
@@ -70,10 +110,22 @@
       <div class="modal">
         <h2 class="modal-title">Edit meal</h2>
         <form id="edit-meal-form">
-          <p class="form-group">
-            <label for="edit-meal-name">Meal name</label>
-            <input id="edit-meal-name" required />
-          </p>
+          <div class="form-row">
+            <p class="form-group">
+              <label for="edit-meal-name">Meal name</label>
+              <input id="edit-meal-name" required />
+            </p>
+            <p class="form-group">
+              <label for="edit-meal-type">Meal type</label>
+              <select id="edit-meal-type" class="meal-type-select">
+                <option value="">â€” None â€”</option>
+                <option value="breakfast">Breakfast</option>
+                <option value="lunch">Lunch</option>
+                <option value="dinner">Dinner</option>
+                <option value="snack">Snack</option>
+              </select>
+            </p>
+          </div>
           <section class="form-row">
             <p class="form-group">
               <label for="edit-meal-calories">Calories</label>
@@ -87,15 +139,15 @@
           <section class="form-row form-row-3">
             <p class="form-group">
               <label for="edit-meal-protein">Protein (g)</label>
-              <input id="edit-meal-protein" type="number" min="0" max="500" placeholder="—" />
+              <input id="edit-meal-protein" type="number" min="0" max="500" placeholder="â€”" />
             </p>
             <p class="form-group">
               <label for="edit-meal-carbs">Carbs (g)</label>
-              <input id="edit-meal-carbs" type="number" min="0" max="1000" placeholder="—" />
+              <input id="edit-meal-carbs" type="number" min="0" max="1000" placeholder="â€”" />
             </p>
             <p class="form-group">
               <label for="edit-meal-fat">Fat (g)</label>
-              <input id="edit-meal-fat" type="number" min="0" max="500" placeholder="—" />
+              <input id="edit-meal-fat" type="number" min="0" max="500" placeholder="â€”" />
             </p>
           </section>
         </form>
@@ -109,6 +161,9 @@
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/chat.js"></script>
     <script src="js/meals.js"></script>
   </body>
 </html>
+
+

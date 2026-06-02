@@ -1,102 +1,127 @@
-# Health Tracker — Meal & Workout Tracker
+﻿# âš¡ APEX â€” Health & Fitness Tracker
 
-Full-stack portfolio project: log meals and workouts, view weekly stats, and manage your data with secure login.
+A full-stack health tracking web app for logging meals, workouts, and body weight. Built as a portfolio project showcasing FastAPI, JWT authentication, PostgreSQL, and a custom dark glass-morphism design system.
 
-## Tech stack
+**[Live Demo](https://APEX-health.netlify.app)** &nbsp;Â·&nbsp; **[API Docs](https://APEX-api.onrender.com/docs)**
 
-- **Backend:** FastAPI, SQLAlchemy, SQLite (local) / PostgreSQL (deploy)
-- **Auth:** JWT (Bearer token)
-- **Frontend:** HTML, CSS, vanilla JavaScript, Chart.js
-- **Deploy:** Render (API + DB), Vercel or Netlify (frontend)
+---
 
 ## Features
 
-- Register, log in, log out
-- CRUD for meals (name, calories, date)
-- CRUD for workouts (type, duration, date)
-- Dashboard with today’s totals and a 7-day chart
+- **Auth** â€” Register / login with JWT tokens and bcrypt password hashing
+- **Meals** â€” Log calories + optional macros (protein, carbs, fat); full edit/delete history
+- **Workouts** â€” Log workout type and duration with full history
+- **Weight** â€” Track body weight with a 90-day trend chart
+- **Dashboard** â€” Weekly bar chart, calorie progress bar, activity streak, macro breakdown
+- **Rate limiting** â€” 5 registrations / 10 logins per minute per IP
+- **Responsive** â€” Sidebar nav on desktop, bottom nav on mobile
 
-## Project structure
+## Tech Stack
 
-```
-backend/          # FastAPI API
-frontend/         # Static web UI
-render.yaml       # Optional Render deploy blueprint
-```
+| Layer | Technology |
+|-------|------------|
+| Frontend | Vanilla HTML / CSS / JavaScript |
+| Charts | Chart.js |
+| Backend | FastAPI (Python 3.12) |
+| ORM | SQLAlchemy 2 |
+| Auth | JWT Â· python-jose Â· bcrypt |
+| Validation | Pydantic v2 |
+| Database | SQLite (dev) / PostgreSQL (prod) |
+| Rate limiting | slowapi |
+| Frontend deploy | Netlify |
+| Backend deploy | Render |
 
-## Run locally (Windows)
+## Local Setup
 
-### 1. Backend
+### Backend
 
-```powershell
+```bash
 cd backend
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+venv\Scripts\activate          # Windows
+# source venv/bin/activate     # macOS / Linux
 pip install -r requirements.txt
-uvicorn main:app --reload
+uvicorn main:app --reload --port 3000
 ```
 
-API: http://127.0.0.1:8000  
-Interactive docs: http://127.0.0.1:8000/docs
+API: `http://127.0.0.1:3000` &nbsp;Â·&nbsp; Docs: `http://127.0.0.1:3000/docs`
 
-### 2. Frontend
+### Frontend
 
-Serve the `frontend` folder with a local static server (required for API calls — do not open HTML files directly as `file://`).
+Serve the `frontend/` folder with any static server. VS Code's **Live Server** extension is the easiest â€” right-click `frontend/index.html` â†’ *Open with Live Server* (serves on port 5500).
 
-**VS Code:** Install “Live Server”, open `frontend/login.html`, click “Go Live” (usually port 5500).
+Or via Python:
 
-**Python:**
-
-```powershell
+```bash
 cd frontend
-python -m http.server 8080
+python -m http.server 5500
 ```
 
-Open http://localhost:8080/login.html
+Open `http://127.0.0.1:5500`.
 
-`frontend/js/config.js` defaults to `http://127.0.0.1:8000` for the API.
+> **Note:** Always serve via HTTP â€” opening HTML files directly as `file://` blocks API calls.
 
-## Deploy
+### Tests
 
-### Backend (Render)
+```bash
+cd backend
+pytest -v
+```
 
-1. Push this repo to GitHub.
-2. On [Render](https://render.com), create a **Web Service** from the repo.
-3. Set **Root Directory** to `backend`.
-4. Build: `pip install -r requirements.txt`
-5. Start: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-6. Add env vars: `SECRET_KEY` (random string), `DATABASE_URL` (from Render PostgreSQL), `ALLOWED_ORIGINS` (your frontend URL).
+---
 
-Or use the included `render.yaml` blueprint.
+## Deployment
 
-### Frontend (Vercel — recommended)
+### Backend â†’ Render
 
-1. Push the repo to GitHub and import it on [Vercel](https://vercel.com).
-2. In project **Settings → General → Root Directory**, set **`frontend`** (this folder contains `login.html`).
-3. Framework Preset: **Other** (no build command needed).
-4. Before deploy, set your API URL in [`frontend/js/config.js`](frontend/js/config.js):
+1. Push repo to GitHub and connect it on [render.com](https://render.com)
+2. Render reads `render.yaml` and auto-provisions:
+   - Web service (`APEX-api`) with a generated `SECRET_KEY`
+   - Free PostgreSQL database (`APEX-db`)
+3. After the first deploy, set the `ALLOWED_ORIGINS` env var to your Netlify URL (e.g. `https://APEX-health.netlify.app`)
 
-   ```js
-   window.API_BASE_URL = "https://YOUR-RENDER-API.onrender.com";
-   ```
+### Frontend â†’ Netlify
 
-5. Deploy. Copy your Vercel URL (e.g. `https://health-tracker.vercel.app`).
-6. On Render, set backend env var `ALLOWED_ORIGINS` to that URL (comma-separated if you have multiple).
+1. Connect repo on [netlify.com](https://netlify.com) â€” it reads `netlify.toml` automatically
+2. Update `frontend/js/config.js`: replace `https://APEX-api.onrender.com` with your actual Render URL
+3. Push â€” Netlify redeploys automatically
 
-### Frontend (Netlify)
+---
 
-Same idea: publish directory `frontend`, update `config.js`, add your site URL to `ALLOWED_ORIGINS` on the backend. See [`netlify.toml`](netlify.toml).
-
-## API overview
+## API Reference
 
 | Method | Path | Description |
 |--------|------|-------------|
-| POST | `/auth/register` | Create account |
-| POST | `/auth/login` | Login (form: username=email, password) |
-| GET | `/auth/me` | Current user (Bearer token) |
-| GET/POST | `/meals` | List / create meals |
-| PUT/DELETE | `/meals/{id}` | Update / delete meal |
-| GET/POST | `/workouts` | List / create workouts |
-| PUT/DELETE | `/workouts/{id}` | Update / delete workout |
-| GET | `/stats/weekly` | Last 7 days aggregates |
+| POST | `/auth/register` | Create account (5/min limit) |
+| POST | `/auth/login` | Login (10/min limit) |
+| GET | `/auth/me` | Current user |
+| GET / POST | `/meals` | List / create meals |
+| GET / PUT / DELETE | `/meals/{id}` | Get / update / delete meal |
+| GET / POST | `/workouts` | List / create workouts |
+| GET / PUT / DELETE | `/workouts/{id}` | Get / update / delete workout |
+| GET / POST | `/weight` | List / log weight entries |
+| GET | `/weight/history` | Last N days for trend chart |
+| GET / PUT / DELETE | `/weight/{id}` | Get / update / delete entry |
+| GET | `/stats/weekly` | 7-day aggregates + streak + macros |
+
+## Project Structure
+
+```
+.
+â”œâ”€â”€ backend/
+â”‚   â”œâ”€â”€ routers/         # auth Â· meals Â· workouts Â· weight Â· stats
+â”‚   â”œâ”€â”€ models.py        # SQLAlchemy models + composite indexes
+â”‚   â”œâ”€â”€ schemas.py       # Pydantic request / response schemas
+â”‚   â”œâ”€â”€ auth.py          # JWT helpers Â· password hashing
+â”‚   â”œâ”€â”€ database.py      # SQLAlchemy engine + session
+â”‚   â”œâ”€â”€ limiter.py       # slowapi rate limiter
+â”‚   â”œâ”€â”€ main.py          # FastAPI app Â· CORS Â· middleware
+â”‚   â””â”€â”€ tests/           # pytest suite (auth, meals, workouts, weight, stats)
+â”œâ”€â”€ frontend/
+â”‚   â”œâ”€â”€ css/styles.css   # APEX design system
+â”‚   â”œâ”€â”€ js/              # api.js Â· nav.js Â· page scripts
+â”‚   â””â”€â”€ *.html           # dashboard Â· meals Â· workouts Â· weight Â· profile
+â”œâ”€â”€ render.yaml          # Render one-click deploy config
+â””â”€â”€ netlify.toml         # Netlify deploy + security headers
+```
 
