@@ -1,4 +1,4 @@
-﻿# âš¡ APEX â€” Health & Fitness Tracker
+# âš¡ APEX â€” Health & Fitness Tracker
 
 A full-stack health tracking web app for logging meals, workouts, and body weight. Built as a portfolio project showcasing FastAPI, JWT authentication, PostgreSQL, and a custom dark glass-morphism design system.
 
@@ -20,8 +20,8 @@ A full-stack health tracking web app for logging meals, workouts, and body weigh
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Vanilla HTML / CSS / JavaScript |
-| Charts | Chart.js |
+| Frontend | React 19 + TypeScript + Vite + Tailwind CSS |
+| Charts | Recharts |
 | Backend | FastAPI (Python 3.12) |
 | ORM | SQLAlchemy 2 |
 | Auth | JWT Â· python-jose Â· bcrypt |
@@ -46,9 +46,23 @@ uvicorn main:app --reload --port 3000
 
 API: `http://127.0.0.1:3000` &nbsp;Â·&nbsp; Docs: `http://127.0.0.1:3000/docs`
 
-### Frontend
+### Frontend (React)
 
-Serve the `frontend/` folder with any static server. VS Code's **Live Server** extension is the easiest â€” right-click `frontend/index.html` â†’ *Open with Live Server* (serves on port 5500).
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Open `http://localhost:5173`
+
+The Vite dev server proxies API calls to `http://127.0.0.1:3000` — start the backend first.
+
+> **Legacy:** The original vanilla HTML frontend is still in `frontend/` if you need it.
+
+### Frontend (legacy vanilla HTML)
+
+Serve the `frontend/` folder with any static server. VS Code's **Live Server** extension is the easiest — right-click `frontend/index.html` → *Open with Live Server* (serves on port 5500).
 
 Or via Python:
 
@@ -58,8 +72,6 @@ python -m http.server 5500
 ```
 
 Open `http://127.0.0.1:5500`.
-
-> **Note:** Always serve via HTTP â€” opening HTML files directly as `file://` blocks API calls.
 
 ### Tests
 
